@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社区动态 - 彩虹桥 LGBTQ+交友平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #ff7eb9;
+            --secondary: #7afcff;
+            --accent: #ff65a3;
+            --dark: #343a40;
+            --light: #f8f9fa;
+            --rainbow-1: #ff7eb9;
+            --rainbow-2: #ff65a3;
+            --rainbow-3: #7afcff;
+            --rainbow-4: #feff9c;
+            --rainbow-5: #fff740;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* 导航栏样式 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 8%;
+            background: rgba(25, 25, 35, 0.85);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--rainbow-1), var(--rainbow-2), var(--rainbow-3), var(--rainbow-4), var(--rainbow-5));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: logo-float 3s ease-in-out infinite;
+        }
+        
+        .logo i {
+            font-size: 2.2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a.active {
+            color: var(--rainbow-3);
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--rainbow-1), var(--rainbow-5));
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--rainbow-1), var(--rainbow-5));
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-btns {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-login {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid var(--rainbow-1);
+        }
+        
+        .btn-signup {
+            background: linear-gradient(90deg, var(--rainbow-1), var(--rainbow-5));
+            color: var(--dark);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 社区内容 */
+        .community-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+        
+        @media (max-width: 992px) {
+            .community-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 帖子区域 */
+        .posts-section {
+            background: rgba(25, 25, 35, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .section-header h2 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, var(--rainbow-1), var(--rainbow-5));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .create-post-btn {
+            background: linear-gradient(90deg, var(--rainbow-1), var(--rainbow-5));
+            color: var(--dark);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .create-post-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 126, 185, 0.4);
+        }
+        
+        /* 帖子卡片 */
+        .post-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+        
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-color: rgba(122, 252, 255, 0.2);
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .post-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+            background: linear-gradient(135deg, var(--rainbow-1), var(--rainbow-5));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .post-author {
+            flex: 1;
+        }
+        
+        .post-author h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .post-content {
+            margin-bottom: 25px;
+            line-height: 1.7;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            color: var(--rainbow-3);
+        }
+        
+        /* 空白帖子 */
+        .blank-post {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .blank-post:hover {
+            border-color: var(--rainbow-3);
+            background: rgba(122, 252, 255, 0.05);
+        }
+        
+        .blank-post i {
+            font-size: 3rem;
+            color: var(--rainbow-3);
+            margin-bottom: 20px;
+        }
+        
+        .blank-post h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--rainbow-3);
+        }
+        
+        .blank-post p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .add-content-btn {
+            background: rgba(122, 252, 255, 0.15);
+            color: var(--rainbow-3);
+            border: 2px solid var(--rainbow-3);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .add-content-btn:hover {
+            background: rgba(122, 252, 255, 0.25);
+            transform: translateY(-3px);
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            background: rgba(25, 25, 35, 0.7);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            height: fit-content;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .sidebar-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--rainbow-3);
+        }
+        
+        .trending-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .topic-tag {
+            background: rgba(122, 252, 255, 0.15);
+            color: var(--rainbow-3);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .topic-tag:hover {
+            background: rgba(122, 252, 255, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        .community-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-card h4 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--rainbow-3);
+        }
+        
+        .stat-card p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .community-events li {
+            list-style: none;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .community-events li:last-child {
+            border-bottom: none;
+        }
+        
+        .event-date {
+            color: var(--rainbow-3);
+            font-weight: 600;
+        }
+        
+        .event-title {
+            margin-top: 5px;
+        }
+        
+        /* 动画效果 */
+        @keyframes logo-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        /* 页脚样式 */
+        .footer {
+            background: rgba(10, 10, 20, 0.95);
+            padding: 4rem 8% 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--rainbow-1), var(--rainbow-5));
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--rainbow-3);
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: linear-gradient(135deg, var(--rainbow-1), var(--rainbow-5));
+            transform: translateY(-5px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem 5%;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .community-container {
+                margin-top: 80px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .create-post-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .post-actions {
+                flex-wrap: wrap;
+            }
+            
+            .stat-card {
+                grid-column: span 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-rainbow"></i>
+            <span>彩虹桥</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">首页</a>
+            <a href="1.html#discover">发现</a>
+            <a href="community.html" class="active">社区</a>
+            <a href="1.html#events">活动</a>
+            <a href="1.html#stories">故事</a>
+        </div>
+        <div class="nav-btns">
+            <button class="btn btn-login">登录</button>
+            <button class="btn btn-signup">注册</button>
+        </div>
+    </nav>
+    
+    <!-- 社区内容 -->
+    <div class="community-container">
+        <main class="posts-section">
+            <div class="section-header">
+                <h2>社区动态</h2>
+                <button class="create-post-btn">
+                    <i class="fas fa-plus"></i> 创建新帖子
+                </button>
+            </div>
+            
+            <!-- 空白帖子 -->
+            <div class="blank-post fade-in">
+                <i class="fas fa-edit"></i>
+                <h3>创建您的第一个帖子</h3>
+                <p>这个区域是专门为您准备的空白帖子模板。点击下方按钮添加您的内容，分享您的想法、经历或问题到社区中。</p>
+                <button class="add-content-btn">添加内容</button>
+            </div>
+            
+            <!-- 示例帖子 -->
+            <div class="post-card fade-in">
+                <div class="post-header">
+                    <div class="post-avatar">
+                        <img src="images/nianyu.png" alt="刘泊岐" style="width:100%;height:100%;object-fit:cover;">
+                    </div>
+                    <div class="post-author">
+                        <h3>泊岐 刘</h3>
+                        <div class="post-meta">
+                            <span>2小时前</span>
+                            <span><i class="fas fa-globe-americas"></i> 公开</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>我为什么要干那些事</p>
+                    <p>我从很久以前就想过，我们这个世界是怎么诞生 的，夸克下面还会有更小的单位吗，如果没有那 夸克是怎么诞生的，我们的世界是怎么出现的， 如果我们这个世界是拟造出来的，那真实的世界 又是怎么出现的，感觉这个问题永远也解释不了</p>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-heart"></i> 点赞 (24)
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-comment"></i> 评论 (7)
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-share"></i> 分享
+                    </button>
+                </div>
+            </div>
+            
+            <div class="post-card fade-in">
+                <div class="post-header">
+                    <div class="post-avatar">
+                        <img src="images/heidan.png" alt="Taylor" style="width:100%;height:100%;object-fit:cover;"> 
+                    </div>
+                    <div class="post-author">
+                        <h3>少杰 陈</h3>
+                        <div class="post-meta">
+                            <span>1天前</span>
+                            <span><i class="fas fa-user-friends"></i> 仅启动群成员</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>我现在很难受</p>
+                    <p>情绪波动大、易烦躁易怒，长期焦虑、莫名紧张不安，抑郁情绪、兴趣减退、开心不起来，注意力不集中、记忆力下降，思维迟缓、决策困难，对生活缺乏热情、有无力感，自我价值感降低、自卑，过度敏感、易被小事激怒，出现强迫性思维（如反复纠结性相关话题），莫名的罪恶感或羞耻感，情绪压抑、难以表达真实感受，对他人产生不信任感，容易陷入自我否定，情绪低落甚至有轻生念头，过度关注自身缺点等情况。行为方面，可能有社交退缩、不愿与人交往，回避亲密关系、害怕身体接触，过度禁欲、对性相关内容极度排斥，相反也可能出现过度手淫等代偿行为，工作效率下降、拖延成习，沉迷网络或游戏、逃避现实，出现攻击性行为（如易怒、争吵），有酗酒、吸烟等不良嗜好，反复清洁或整理、通过刻板行为缓解焦虑，购物成瘾等冲动行为，睡眠习惯紊乱（熬夜或嗜睡），饮食不规律（暴饮暴食或厌食），对曾经喜欢的活动失去兴趣，刻意保持距离、拒绝情感交流，过度工作、用忙碌麻痹自己等表现。生理方面，则可能存在失眠或睡眠质量差（多梦、易醒），头痛、头晕等躯体不适，心慌等
+                    </p>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-heart"></i> 点赞 (56)
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-comment"></i> 评论 (12)
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-share"></i> 分享
+                    </button>
+                </div>
+            </div>
+        </main>
+        
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3>热门话题</h3>
+                <div class="trending-topics">
+                    <span class="topic-tag">出柜经历</span>
+                    <span class="topic-tag">健康建议</span>
+                    <span class="topic-tag">关系建议</span>
+                    <span class="topic-tag">LGBTQ+权利</span>
+                    <span class="topic-tag">社区活动</span>
+                    <span class="topic-tag">艺术与文化</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>社区数据</h3>
+                <div class="community-stats">
+                    <div class="stat-card">
+                        <h4>8.2K</h4>
+                        <p>社区成员</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>1.4K</h4>
+                        <p>在线用户</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>24.5K</h4>
+                        <p>帖子总数</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>76.8K</h4>
+                        <p>互动次数</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>近期活动</h3>
+                <ul class="community-events">
+                    <li>
+                        <div class="event-date">7月15日</div>
+                        <div class="event-title">中央公园彩虹野餐</div>
+                    </li>
+                    <li>
+                        <div class="event-date">7月22日</div>
+                        <div class="event-title">LGBTQ+电影放映夜</div>
+                    </li>
+                    <li>
+                        <div class="event-date">7月29日</div>
+                        <div class="event-title">性别认同研讨会</div>
+                    </li>
+                    <li>
+                        <div class="event-date">8月5日</div>
+                        <div class="event-title">骄傲游行筹备会议</div>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>彩虹桥</h3>
+                <p style="color:rgba(255,255,255,0.7); line-height:1.6; margin-bottom:1.5rem;">
+                    致力于为LGBTQ+群体创造一个安全、包容的交友环境，让每个人都能自由地表达和连接。
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>快速链接</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="#">关于我们</a></li>
+                    <li><a href="#">社区准则</a></li>
+                    <li><a href="#">活动日历</a></li>
+                    <li><a href="#">成功故事</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>帮助中心</h3>
+                <ul class="footer-links">
+                    <li><a href="#">常见问题</a></li>
+                    <li><a href="#">安全指南</a></li>
+                    <li><a href="#">隐私政策</a></li>
+                    <li><a href="#">服务条款</a></li>
+                    <li><a href="#">联系我们</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>订阅更新</h3>
+                <p style="color:rgba(255,255,255,0.7); margin-bottom:1.5rem;">
+                    订阅我们的新闻通讯，获取最新活动和社区消息
+                </p>
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="您的电子邮箱">
+                </div>
+                <button class="submit-btn" style="margin-top:0;">订阅</button>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 彩虹桥 LGBTQ+ 交友平台. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 简单的交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加内容按钮
+            const addContentBtn = document.querySelector('.add-content-btn');
+            if (addContentBtn) {
+                addContentBtn.addEventListener('click', function() {
+                    const blankPost = document.querySelector('.blank-post');
+                    blankPost.innerHTML = `
+                        <div style="text-align:left;">
+                            <h3 style="color:var(--rainbow-3); margin-bottom:20px;">编辑您的帖子</h3>
+                            <textarea style="width:100%; height:150px; background:rgba(255,255,255,0.05); 
+                                border:1px solid rgba(255,255,255,0.1); border-radius:10px; 
+                                padding:15px; color:white; margin-bottom:20px;" 
+                                placeholder="在此输入您的帖子内容..."></textarea>
+                            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                                <button class="btn btn-login">取消</button>
+                                <button class="btn btn-signup">发布</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            // 帖子卡片悬停效果
+            const postCards = document.querySelectorAll('.post-card');
+            postCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // 创建新帖子按钮
+            const createPostBtn = document.querySelector('.create-post-btn');
+            if (createPostBtn) {
+                createPostBtn.addEventListener('click', function() {
+                    const postsSection = document.querySelector('.posts-section');
+                    const newPost = document.createElement('div');
+                    newPost.className = 'blank-post fade-in';
+                    newPost.innerHTML = `
+                        <i class="fas fa-edit"></i>
+                        <h3>创建新帖子</h3>
+                        <p>在此区域添加您的新内容，与社区分享您的想法和经历。</p>
+                        <button class="add-content-btn">添加内容</button>
+                    `;
+                    postsSection.insertBefore(newPost, postsSection.firstChild.nextSibling);
+                    
+                    // 滚动到新帖子
+                    newPost.scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
